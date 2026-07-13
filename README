@@ -1,3 +1,11 @@
+Tabalho com o objetivo de entender como funciona e criar um escalonador e uma syscall.
+
+Como meta, o desafio é substituir o escalonador padrão do xv6 por um outro que utiliza tickets para escolher aleatoriamente um processo. Além disso, deveriamos criar uma syscall que retorna a quantidade de vezes que um processo foi escolhido por esse escalonador.
+
+[SYS_getruncount] sys_getruncount 23 -> syscall criada.
+
+Informações do projeto:
+
 xv6 is a re-implementation of Dennis Ritchie's and Ken Thompson's Unix
 Version 6 (v6).  xv6 loosely follows the structure and style of v6,
 but is implemented for a modern RISC-V multiprocessor using ANSI C.
