@@ -107,3 +107,9 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+uint64
+sys_getruncount(void)
+{
+  return myproc()->contador_escalonador;
+}

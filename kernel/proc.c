@@ -125,6 +125,10 @@ found:
   p->pid = allocpid();
   p->state = USED;
 
+  p->tickets = 1; // O processo começa com 1 ticket
+  p->contador_escalonador = 0; // O contador inicia com 0
+
+
   // Allocate a trapframe page.
   if ((p->trapframe = (struct trapframe *)kalloc()) == 0) {
     freeproc(p);
@@ -437,27 +441,54 @@ scheduler(void)
     intr_on();
     intr_off();
 
+    // Inicia uma varia para contar quantos tickets existem no total
+    int totaltickets = 0;
+
     int found = 0;
     for (p = proc; p < &proc[NPROC]; p++) {
       acquire(&p->lock);
+      // Conta quantos tickets existem no total
       if (p->state == RUNNABLE) {
-        // Switch to chosen process.  It is the process's job
-        // to release its lock and then reacquire it
-        // before jumping back to us.
-        p->state = RUNNING;
-        c->proc = p;
-        swtch(&c->context, &p->context);
-
-        // Process is done running for now.
-        // It should have changed its p->state before coming back.
-        c->proc = 0;
-        found = 1;
+        totaltickets += p->tickets;
       }
       release(&p->lock);
     }
-    if (found == 0) {
+    // 
+    if (totaltickets == 0) {
       // nothing to run; stop running on this core until an interrupt.
       asm volatile("wfi");
+    }
+
+    // Sorteia um ticket 
+    int ticket_ganhador = getrandom(0, totaltickets);
+
+    // Reseta a contagem
+    totaltickets = 0;
+
+    for(p = proc; p < &proc[NPROC]; p++) {
+      acquire(&p->lock);
+      if (p->state == RUNNABLE) {
+        ticket_ganhador += p->tickets;
+        if (ticket_ganhador >= totaltickets) {
+          // Switch to chosen process.  It is the process's job
+          // to release its lock and then reacquire it
+          // before jumping back to us.
+          p->state = RUNNING;
+          c->proc = p;
+
+          // Incrementa o contador
+          p->contador_escalonador++;
+
+          swtch(&c->context, &p->context);
+
+          // Process is done running for now.
+          // It should have changed its p->state before coming back.
+          c->proc = 0;
+          release(&p->lock);
+          break;
+        }
+      }
+      release(&p->lock);
     }
   }
 }
