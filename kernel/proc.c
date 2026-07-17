@@ -463,13 +463,13 @@ scheduler(void)
     int ticket_ganhador = getrandom(0, totaltickets);
 
     // Reseta a contagem
-    totaltickets = 0;
+    int contador = 0;
 
     for(p = proc; p < &proc[NPROC]; p++) {
       acquire(&p->lock);
       if (p->state == RUNNABLE) {
-        ticket_ganhador += p->tickets;
-        if (ticket_ganhador >= totaltickets) {
+        contador += p->tickets;
+        if (contador >= ticket_ganhador) {
           // Switch to chosen process.  It is the process's job
           // to release its lock and then reacquire it
           // before jumping back to us.
