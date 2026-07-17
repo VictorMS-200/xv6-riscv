@@ -4,6 +4,16 @@ Como meta, o desafio é substituir o escalonador padrão do xv6 por um outro que
 
 [SYS_getruncount] sys_getruncount 23 -> syscall criada.
 
+Arquivos que foi modificado:
+
+proc.h - Foi adicionado duas variáveis na estrutura do processo.
+proc.c - Foi adicionado a lógica do escalonador e a implementação da syscall.
+syscall.h - Foi adicionado a definição da syscall.
+syscall.c - Foi adicionado a implementação da syscall.
+sysproc.c - Foi adicionado a implementação da syscall.
+user.h - Foi adicionado a definição da syscall.
+usys.pl - Foi adicionado a definição da syscall.
+
 Informações do projeto:
 
 xv6 is a re-implementation of Dennis Ritchie's and Ken Thompson's Unix
