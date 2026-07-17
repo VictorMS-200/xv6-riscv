@@ -1,6 +1,8 @@
-Tabalho com o objetivo de entender como funciona e criar um escalonador e uma syscall.
+# Criando um escalonador (lottery) e uma syscall no xv6
 
-Como meta, o desafio é substituir o escalonador padrão do xv6 por um outro que utiliza tickets para escolher aleatoriamente um processo. Além disso, deveriamos criar uma syscall que retorna a quantidade de vezes que um processo foi escolhido por esse escalonador.
+### Tabalho com o objetivo de entender como funciona e criar um escalonador e uma syscall.
+
+O desafio do trabalho é substituir o escalonador padrão do xv6 (robin-round) por um outro que utiliza tickets para escolher aleatoriamente um processo. Além disso, deveriamos criar uma syscall que retorna a quantidade de vezes que um processo foi escolhido por esse escalonador.
 
 [SYS_getruncount] sys_getruncount 23 -> syscall criada.
 
