@@ -18,9 +18,11 @@ void trabalho() {
     // Termina o contador de ticks
     int end_time = uptime();
 
+    int contador = getruncount(); // Obtém o número de execuções do processo
+
     int total_time = end_time - start_time;
     
-    printf("O processo %d terminou em %d ticks.\n", pid, total_time);
+    printf("O processo %d terminou em %d ticks com %d execuções.\n", pid, total_time, contador);
     exit(0);
 }
 
