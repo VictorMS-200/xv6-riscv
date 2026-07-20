@@ -418,6 +418,17 @@ kwait(uint64 addr)
   }
 }
 
+// Gerador Pseudoaleatório de números inteiros (exclusivo)
+int state = 1;
+
+int getrandom(int min, int max) {
+    if (max <= min) 
+      return min;
+    state = state * 0x343FD + 0x269EC3;
+    unsigned int random_val = (state & 0x7FFFFFFF) >> 16;
+    return min + (random_val % (max - min));
+}
+
 // Per-CPU process scheduler.
 // Each CPU calls scheduler() after setting itself up.
 // Scheduler never returns.  It loops, doing:
@@ -444,7 +455,6 @@ scheduler(void)
     // Inicia uma varia para contar quantos tickets existem no total
     int totaltickets = 0;
 
-    int found = 0;
     for (p = proc; p < &proc[NPROC]; p++) {
       acquire(&p->lock);
       // Conta quantos tickets existem no total
@@ -478,6 +488,11 @@ scheduler(void)
 
           // Incrementa o contador
           p->contador_escalonador++;
+          // Incrementa o número de tickets do processo, mas não ultrapassa 200
+          p->tickets = p->tickets + 10;
+          if (p->tickets > 200) {
+            p->tickets = 200;
+          }
 
           swtch(&c->context, &p->context);
 
